@@ -21,10 +21,21 @@ public class QFDMatcherReducer extends Reducer<IntWritable, WebTrafficRecord, Re
         // One thing to really remember, the Iterable element passed
         // from hadoop are designed as READ ONCE data, you will
         // probably want to copy that to some other data structure if
-        // you want to iterate mutliple times over the data.
+        // you want to iterate mutliple times over the data.  ????????? what is this??data structure?
 
-        System.err.println("Need to implement!");
-
+        for(int i=0; i<values.length; i++)
+        {
+            //if it's a request:
+            if(values[i].getUserName==Null)
+            {
+                WebTrafficRecord request=values[i];
+                for(int j=0; j<values.length; j++)
+                {
+                    if(values[j].getCookie()==Null  && (values[j].getTimestamp()<=request.getTimestamp()-10 || request.getTimestamp()<=values[j].getTimestamp()-10) && i!=j)
+                    ctxt.write( RequestReplyMatch( request, values[j]) , NullWriteable);
+                }
+        }
+        }
         // ctxt.write should be RequestReplyMatch and a NullWriteable
     }
 }
