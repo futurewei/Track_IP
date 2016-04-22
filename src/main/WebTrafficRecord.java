@@ -22,6 +22,7 @@ public class WebTrafficRecord implements Writable, Serializable {
     private String userName;
     private String cookie;
 
+//constructor
     private WebTrafficRecord(long timestamp, String srcIp, int srcPort, String destIp, int destPort,
                              boolean isRequest, String userNameOrCookie) {
         this.timestamp = timestamp;
@@ -38,12 +39,12 @@ public class WebTrafficRecord implements Writable, Serializable {
             cookie = null;
         }
     }
-
+    //return a new request object with IP tuple, time, cookie information in it.  True means it's a request.
     public static WebTrafficRecord newRequest(long timestamp, String srcIp, int srcPort, String destIp,
                                               int destPort, String cookie) {
         return new WebTrafficRecord(timestamp, srcIp, srcPort, destIp, destPort, true, cookie);
     }
-
+    //return a new reply object with IP tuple, time, cookie information in it.  False means it's not a request.
     public static WebTrafficRecord newReply(long timestamp, String srcIp, int srcPort, String destIp,
                                             int destPort, String userName) {
         return new WebTrafficRecord(timestamp, srcIp, srcPort, destIp, destPort, false, userName);
@@ -89,9 +90,10 @@ public class WebTrafficRecord implements Writable, Serializable {
         return cookie;
     }
 
+//unpack the package using index, and then create its webrecord object with information decoded filling in.
     public static WebTrafficRecord parseFromLine(String line) {
         String[] tokens = line.split("\\t");
-        assert tokens.length == 7;
+        assert tokens.length == 7;   //if token length is not 7, it's problem. 
 
         long timestamp = Long.parseLong(tokens[TIMESTAMP_IDX]);
         String srcIp = tokens[SOURCE_IP_IDX];
@@ -142,7 +144,7 @@ public class WebTrafficRecord implements Writable, Serializable {
             cookie = null;
         }
     }
-
+    // a helper function that tells if   the two webrecord object have same information.
     public boolean tupleMatches(WebTrafficRecord other) {
         return this.getSrcIp().equals(other.getSrcIp()) &&
                this.getSrcPort() == other.getSrcPort() &&
@@ -161,6 +163,7 @@ public class WebTrafficRecord implements Writable, Serializable {
         }
     }
 
+    //overwrite equals to check if two objects have same tuple information.
     @Override
     public boolean equals(Object o) {
         if (o == null) {

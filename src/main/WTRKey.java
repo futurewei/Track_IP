@@ -39,6 +39,7 @@ public class WTRKey implements WritableComparable {
         hashBytes = dataInput.readUTF();
     }
 
+    //if the object is an instance of WTRKey, and if the name is the same, then we compare whether their hashBytes are same or not. if all same, they're same.
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof WTRKey)) {
