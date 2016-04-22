@@ -24,10 +24,15 @@ public class QFDMatcherReducer extends Reducer<IntWritable, WebTrafficRecord, Re
         // you want to iterate mutliple times over the data.  
 
         ArrayList<WebTrafficRecord> myArray = new ArrayList<WebTrafficRecord>();
+        //fill in the arraylist first
+        for(int k=0; k<values.length; k++)
+        {
+            myArray.add(values[k]);
+        }
+
 
         for(int i=0; i<values.length; i++)
         {
-            myArray.add(values[i]);
             //if it's a request:
             if(myArray.get(i).getUserName==Null)
             {
