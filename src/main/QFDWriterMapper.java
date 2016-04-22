@@ -42,7 +42,7 @@ public class QFDWriterMapper extends Mapper<RequestReplyMatch,
         // have the outputs be WTRKey/RequestReplyMatch pairs
         // since this dictates how to go to a particular
         // QFD
-
+                //design a particular hashkey for a particular attribute, such as IP.
         // As an example, to dispatch for the "srcIP", the
         // hash should be
 
@@ -54,10 +54,43 @@ public class QFDWriterMapper extends Mapper<RequestReplyMatch,
             // WTRKey key = new WTRKey("srcIP", hashString);
             // ctxt.write(key, record);
 
-        // You need to do srcIP, destIP, and cookie QFD dispatch, and should
-        // be able to use a much more generic structure
+        /*
+        Create a copy of the messageDigest variable, which was initialized in the setup method. This represents a hash function.
+        Add the bytes of the record's source IP to the hash function object.
+        Compute the hash function, which produces an array of bytes.
+        Copy this array to a new array, *****but only including the first HashUtils.NUM_HASH_BYTES elements.
+        Convert the contents of this new array to a string in hexadecimal notation.
+        Create a new WTRKey object.
+        Emit a key/value pair to be used in a reducer. The key is the WTRKey that was just created, while the value is the record.
+        */
 
-        System.err.println("Here needs implementation!");
+        // You need to do srcIP, destIP, and cookie QFD dispatch, and should
+        // be able to use a much more generic structure   ?
+       //simply repeat  3 times???
+
+            MessageDigest md = HashUtils.cloneMessageDigest(messageDigest);
+            md.update(record.getSrcIp().getBytes(StandardCharsets.UTF_8));
+            byte[] hash = md.digest();
+            byte[] hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
+            String hashString = DatatypeConverter.printHexBinary(hashBytes);
+            WTRKey key = new WTRKey("srcIP", hashString);
+            ctxt.write(key, record);
+
+            MessageDigest cd = HashUtils.cloneMessageDigest(messageDigest);
+            cd.update(record.getDestIp().getBytes(StandardCharsets.UTF_8));
+            byte[] hash = cd.digest();
+            byte[] hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
+            String hashString = DatatypeConverter.printHexBinary(hashBytes);
+            WTRKey key = new WTRKey("DestIP", hashString);
+            ctxt.write(key, record);
+
+            MessageDigest hd = HashUtils.cloneMessageDigest(messageDigest);
+            hd.update(record.getCookie().getBytes(StandardCharsets.UTF_8));
+            byte[] hash = hd.digest();
+            byte[] hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
+            String hashString = DatatypeConverter.printHexBinary(hashBytes);
+            WTRKey key = new WTRKey("Cookie", hashString);
+            ctxt.write(key, record);
     }
 
 }
