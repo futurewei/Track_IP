@@ -1,5 +1,6 @@
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.fs.FileSystem;
 
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
 
         // The input will be a WTR key and a set of matches.
 
-        // You will want to open the file named
+        // You will want to open the file named  
         // "qfds/key.getName()/key.getName()_key.getHashBytes()"
         // using the FileSystem interface for Hadoop.
 
@@ -24,7 +25,26 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         // gets the interface to the filesysstem
         // new Path(filename) gives a path specification
         // hdfs.create(path, true) will create an
-        // output stream pointing to that file
+        // output stream pointing to that file   
+        // use the reducer for is writing a QueryFocusedDataSet to the filesystem. 
+        List<WebTrafficRecord> myArr = new ArrayList<>();
+        for (int i=0; i<values.length; i++) {
+            myArr.add(values[i]);
+        }
 
+
+        String keyName=key.getName();
+        String keyHash=key.getHashBytes();
+        String filename="qfds/"+keyName+"/"+keyName+"_"+keyHash;
+        FileSystem file=FileSystem.get(ctxt.getConfiguration());
+        Path path=new Path(filename);
+        FSDataOutputStream outputStream = hdfs.create(path);
+        ObjectOutputStream oos=new ObjectOutputStream(outputStream);
+        for(int j=0; j<myArr.size();j++) 
+        {
+            oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, myArr.get(j)));
+        }
+        oos.close();
     }
 }
+
