@@ -28,11 +28,15 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         // output stream pointing to that file   
         // use the reducer for is writing a QueryFocusedDataSet to the filesystem. 
         List<WebTrafficRecord> myArr = new ArrayList<>();
-        for (int i=0; i<values.length; i++) {
-            myArr.add(values[i]);
+        for (WebTrafficRecord wtr: values) {
+            myArr.add(new WebTrafficRecord(wtr));
         }
-
-
+        Set<QueryFocusedDataSet> qfdsSet = new HashSet();
+        for(int k=0; k<myArr.size(); k++)
+        {
+            qfdsSet.add( myArr.get(k));
+        }
+        
         String keyName=key.getName();
         String keyHash=key.getHashBytes();
         String filename="qfds/"+keyName+"/"+keyName+"_"+keyHash;
@@ -40,10 +44,7 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         Path path=new Path(filename);
         FSDataOutputStream outputStream = hdfs.create(path);
         ObjectOutputStream oos=new ObjectOutputStream(outputStream);
-        for(int j=0; j<myArr.size();j++) 
-        {
-            oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, myArr.get(j)));
-        }
+        oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, qfdsSet));  
         oos.close();
     }
 }

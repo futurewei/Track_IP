@@ -25,13 +25,13 @@ public class QFDMatcherReducer extends Reducer<IntWritable, WebTrafficRecord, Re
 
         ArrayList<WebTrafficRecord> myArray = new ArrayList<WebTrafficRecord>();
         //fill in the arraylist first
-        for(int k=0; k<values.length; k++)
+        for(WebTrafficRecord wtr: values)
         {
-            myArray.add(values[k]);
+            myArray.add(new WebTrafficRecord(wtr));
         }
 
 
-        for(int i=0; i<values.length; i++)
+        for(int i=0; i<myArray.size(); i++)
         {
             //if it's a request:
             if(myArray.get(i).getUserName==Null)
