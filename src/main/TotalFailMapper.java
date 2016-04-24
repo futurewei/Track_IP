@@ -59,12 +59,12 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         for(iterr=matches.iterator; iterr.hasNext();)
         {
             match=iterr.next();
-            cook= match.getCookie();
+            cook= match.getCookie();   //get cookie from each request/reply pair.
             MessageDigest xd = HashUtils.cloneMessageDigest(messageDigest);
             xd.update(cook.getBytes(StandardCharsets.UTF_8));
             hash = xd.digest();
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
-            String cookieHash = DatatypeConverter.printHexBinary(hashBytes);
+            String cookieHash = DatatypeConverter.printHexBinary(hashBytes);  //generate a hash for each cookie.
 
             filename= "qfds/Cookie/Cookie_"+cookieHash;
             path=new Path(filename);
@@ -82,7 +82,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             }
 
         Set<RequestReplyMatch> couple=qfdsc.getMatches();
-
+        //context write each request/reply pair associated with each cookie
         for(iter=couple.iterator(); iter.hasNext();)
         {
             record=iter.next();
@@ -92,7 +92,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             hash = hd.digest();
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
             String hashUser = DatatypeConverter.printHexBinary(hashBytes);
-            
+
             WTRKey userKey = new WTRKey("torusers", hashUser);
             ctxt.write(userKey, record);   //username
         }
