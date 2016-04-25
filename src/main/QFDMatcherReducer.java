@@ -34,15 +34,15 @@ public class QFDMatcherReducer extends Reducer<IntWritable, WebTrafficRecord, Re
         for(int i=0; i<myArray.size(); i++)
         {
             //if it's a request:
-            if(myArray.get(i).getUserName==Null)
+            if(myArray.get(i).getUserName==null)
             {
                 WebTrafficRecord request=myArray.get(i);
                 for(int j=0; j<myArray.size(); j++)
                 {
                     WebTrafficRecord reply=myArray.get(j);
-                    if(reply.getCookie()==Null  && (reply.getTimestamp()<=request.getTimestamp()-10 || request.getTimestamp()<=reply.getTimestamp()-10) && i!=j)
+                    if(reply.getCookie()==null  && (reply.getTimestamp()<=request.getTimestamp()-10 || request.getTimestamp()<=reply.getTimestamp()-10) && i!=j)
                     {
-                     ctxt.write( RequestReplyMatch( request, reply) , NullWriteable.get());
+                     ctxt.write(new RequestReplyMatch( request, reply) , NullWriteable.get());
                     }
                 }
         }

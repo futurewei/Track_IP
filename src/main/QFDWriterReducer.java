@@ -1,7 +1,9 @@
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.fs.FileSystem;
-
+import java.util.*;
+import java.io.FileOutputStream;
+import java.nio.file.Path;
 import java.io.IOException;
 
 public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWritable, NullWritable> {
@@ -27,7 +29,7 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         // hdfs.create(path, true) will create an
         // output stream pointing to that file   
         // use the reducer for is writing a QueryFocusedDataSet to the filesystem. 
-        List<WebTrafficRecord> myArr = new ArrayList<>();
+        ArrayList<WebTrafficRecord> myArr = new ArrayList<>();
         for (WebTrafficRecord wtr: values) {
             myArr.add(new WebTrafficRecord(wtr));
         }

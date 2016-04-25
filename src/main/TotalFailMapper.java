@@ -4,6 +4,11 @@ import org.apache.hadoop.mapreduce.Mapper;
 import java.util.*;
 import java.io.IOException;
 import java.security.MessageDigest;
+import org.apache.hadoop.fs.FileSystem;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.nio.file.Path;
+
 
 public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
                                             RequestReplyMatch> {
