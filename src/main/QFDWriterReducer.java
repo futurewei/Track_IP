@@ -44,8 +44,8 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         String keyName=key.getName();
         String keyHash=key.getHashBytes();
         String filename="qfds/"+keyName+"/"+keyName+"_"+keyHash;
-        FileSystem file=FileSystem.get(ctxt.getConfiguration());
-        Path path=new Path(filename);
+        FileSystem hdfs=FileSystem.get(ctxt.getConfiguration());
+        Path path=new Path(filename);                      
         FSDataOutputStream outputStream = hdfs.create(path);
         ObjectOutputStream oos=new ObjectOutputStream(outputStream);
         oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, matchSet));  

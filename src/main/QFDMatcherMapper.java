@@ -16,6 +16,7 @@ public class QFDMatcherMapper extends Mapper<LongWritable, Text,
         // records with the same source IP/source port/dest IP/dest port
         // are the same so they always go to the same reducer...
         WebTrafficRecord obj=WebTrafficRecord.parseFromLine(line.toString());
-        ctxt.write(obj.hashCode(), obj);
+        ctxt.write(new IntWritable(obj.hashCode()), obj);
     }
 }
+new intwr
