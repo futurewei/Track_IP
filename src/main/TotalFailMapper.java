@@ -78,7 +78,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
             String cookieHash = DatatypeConverter.printHexBinary(hashBytes);  //generate a hash for each cookie.
 
-            filename= "qfds/Cookie/Cookie_"+cookieHash;
+            filename= "qfds/cookie/cookie_"+cookieHash;
             path=new Path(filename);
             QueryFocusedDataSet qfdsc=null;
             try 

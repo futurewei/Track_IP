@@ -82,7 +82,7 @@ public class QFDWriterMapper extends Mapper<RequestReplyMatch,
             hash = md.digest();
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
             String hashDestIp = DatatypeConverter.printHexBinary(hashBytes);
-            WTRKey key_2 = new WTRKey("DestIP", hashDestIp);
+            WTRKey key_2 = new WTRKey("destIP", hashDestIp);
             ctxt.write(key_2, record);
 
             md = HashUtils.cloneMessageDigest(messageDigest);
@@ -90,7 +90,7 @@ public class QFDWriterMapper extends Mapper<RequestReplyMatch,
             hash = md.digest();
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
             String hashCookie = DatatypeConverter.printHexBinary(hashBytes);
-            WTRKey key_3 = new WTRKey("Cookie", hashCookie);
+            WTRKey key_3 = new WTRKey("cookie", hashCookie);
             ctxt.write(key_3, record);
     }
 
