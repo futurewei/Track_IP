@@ -5,10 +5,13 @@ import java.util.*;
 import java.io.IOException;
 import java.security.MessageDigest;
 import org.apache.hadoop.fs.FileSystem;
-import java.io.FileOutputStream;
+import java.io.FileOutputStream; //no need?
 import java.io.ObjectInputStream;
-import java.nio.file.Path;
-
+import org.apache.hadoop.fs.Path;
+import java.util.Iterator;
+import java.security.NoSuchAlgorithmException;
+import org.apache.hadoop.fs.FSDataInputStream;
+import javax.xml.bind.DatatypeConverter;
 
 public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
                                             RequestReplyMatch> {
