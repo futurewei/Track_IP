@@ -50,12 +50,13 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         String hashString = DatatypeConverter.printHexBinary(hashBytes);
         String filename= "qfds/srcIP/srcIP_"+hashString;
         Path path=new Path(filename);
+        QueryFocusedDataSet qfds;
         try 
         {
             FileSystem hdfs=FileSystem.get(ctxt.getConfiguration());
-            FSDataInputStream inputStream = hdfs.create(path);   //??????????????how to create input stream...
+            FSDataInputStream inputStream = hdfs.open(path);   //??????????????how to create input stream...
             ObjectInputStream is=new ObjectInputStream(inputStream);
-            QueryFocusedDataSet qfds=(QueryFocusedDataSet)is.readObject();
+            qfds=(QueryFocusedDataSet)is.readObject();
             is.close();
         } 
         catch (Exception e) 
@@ -65,11 +66,10 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
 
         Set<RequestReplyMatch> matches=qfds.getMatches();  //what if no match???
         String cook;
-        RequestReplyMatch match;
         Iterator iterr;
         for(iterr=matches.iterator(); iterr.hasNext();)
         {
-            match=iterr.next();
+            RequestReplyMatch match=iterr.next();
             cook= match.getCookie();   //get cookie from each request/reply pair.
             MessageDigest xd = HashUtils.cloneMessageDigest(messageDigest);
             xd.update(cook.getBytes(StandardCharsets.UTF_8));
@@ -79,12 +79,13 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
 
             filename= "qfds/Cookie/Cookie_"+cookieHash;
             path=new Path(filename);
+            QueryFocusedDataSet qfdsc;
             try 
             {
                 FileSystem hdfsk=FileSystem.get(ctxt.getConfiguration());
-                FSDataInputStream inpuStream = hdfsk.create(path);
+                FSDataInputStream inpuStream = hdfsk.open(path);
                 ObjectInputStream ks=new ObjectInputStream(inpuStream);
-                QueryFocusedDataSet qfdsc=(QueryFocusedDataSet)ks.readObject();
+                qfdsc=(QueryFocusedDataSet)ks.readObject();
                 ks.close();
             } 
             catch (Exception e) 
@@ -93,12 +94,11 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             }
 
         Set<RequestReplyMatch> couple=qfdsc.getMatches();
-        RequestReplyMatch record;
         //context write each request/reply pair associated with each cookie
         Iterator iter;
         for(iter=couple.iterator(); iter.hasNext();)
         {
-            record=iter.next();
+            RequestReplyMatch record=iter.next();
 
             MessageDigest hd = HashUtils.cloneMessageDigest(messageDigest);
             hd.update(record.getUserName().getBytes(StandardCharsets.UTF_8));
@@ -110,4 +110,5 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             ctxt.write(userKey, record);   //username
         }
     }
+}
 }
