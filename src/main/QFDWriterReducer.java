@@ -49,7 +49,8 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         Path path=new Path(filename);                      
         FSDataOutputStream outputStream = hdfs.create(path);
         ObjectOutputStream oos=new ObjectOutputStream(outputStream);
-        oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, matchSet));  
+        oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, matchSet));
+        outputStream.close();  
         oos.close();
     }
 }

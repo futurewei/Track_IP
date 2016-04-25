@@ -57,6 +57,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             FSDataInputStream inputStream = hdfs.open(path);   //??????????????how to create input stream...
             ObjectInputStream is=new ObjectInputStream(inputStream);
             qfds=(QueryFocusedDataSet)is.readObject();
+            inputStream.close();
             is.close();
         } 
         catch (Exception e) 
@@ -86,6 +87,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
                 FSDataInputStream inpuStream = hdfsk.open(path);
                 ObjectInputStream ks=new ObjectInputStream(inpuStream);
                 qfdsc=(QueryFocusedDataSet)ks.readObject();
+                inpuStream.close();
                 ks.close();
             } 
             catch (Exception e) 
