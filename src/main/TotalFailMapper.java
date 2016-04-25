@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.security.NoSuchAlgorithmException;
 import org.apache.hadoop.fs.FSDataInputStream;
 import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
 
 public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
                                             RequestReplyMatch> {
@@ -21,7 +22,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
     public void setup(Context ctx) {
         // You probably need to do the same setup here you did
         // with the QFD writer
-         super.setup(ctxt);
+         super.setup(ctx);
         try {
             messageDigest = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
@@ -52,7 +53,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         try 
         {
             FileSystem hdfs=FileSystem.get(ctxt.getConfiguration());
-            FSDataInputStream inputStream = hdfs.create(path);
+            FSDataInputStream inputStream = hdfs.create(path);   //??????????????how to create input stream...
             ObjectInputStream is=new ObjectInputStream(inputStream);
             QueryFocusedDataSet qfds=(QueryFocusedDataSet)is.readObject();
             is.close();
@@ -62,9 +63,11 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             e.printStackTrace(); 
         }        
 
-        Set<RequestReplyMatch> matches=qfds.getMatches();
+        Set<RequestReplyMatch> matches=qfds.getMatches();  //what if no match???
         String cook;
-        for(iterr=matches.iterator; iterr.hasNext();)
+        RequestReplyMatch match;
+        Iterator iterr;
+        for(iterr=matches.iterator(); iterr.hasNext();)
         {
             match=iterr.next();
             cook= match.getCookie();   //get cookie from each request/reply pair.
@@ -90,7 +93,9 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             }
 
         Set<RequestReplyMatch> couple=qfdsc.getMatches();
+        RequestReplyMatch record;
         //context write each request/reply pair associated with each cookie
+        Iterator iter;
         for(iter=couple.iterator(); iter.hasNext();)
         {
             record=iter.next();
