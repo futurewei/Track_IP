@@ -69,7 +69,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         Iterator iterr;
         for(iterr=matches.iterator(); iterr.hasNext();)
         {
-            RequestReplyMatch match=iterr.next();
+            RequestReplyMatch match=(RequestReplyMatch)iterr.next();
             cook= match.getCookie();   //get cookie from each request/reply pair.
             MessageDigest xd = HashUtils.cloneMessageDigest(messageDigest);
             xd.update(cook.getBytes(StandardCharsets.UTF_8));
@@ -98,7 +98,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         Iterator iter;
         for(iter=couple.iterator(); iter.hasNext();)
         {
-            RequestReplyMatch record=iter.next();
+            RequestReplyMatch record=(RequestReplyMatch)iter.next();
 
             MessageDigest hd = HashUtils.cloneMessageDigest(messageDigest);
             hd.update(record.getUserName().getBytes(StandardCharsets.UTF_8));
