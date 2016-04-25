@@ -19,4 +19,3 @@ public class QFDMatcherMapper extends Mapper<LongWritable, Text,
         ctxt.write(new IntWritable(obj.hashCode()), obj);
     }
 }
-new intwr
