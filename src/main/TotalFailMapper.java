@@ -19,7 +19,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
 
     private MessageDigest messageDigest;
     @Override
-    public void setup(Context ctx) {
+    public void setup(Context ctx) throws IOException, InterruptedException {
         // You probably need to do the same setup here you did
         // with the QFD writer
          super.setup(ctx);
@@ -50,19 +50,13 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         String hashString = DatatypeConverter.printHexBinary(hashBytes);
         String filename= "qfds/srcIP/srcIP_"+hashString;
         Path path=new Path(filename);
-        QueryFocusedDataSet qfds;
         try 
         {
             FileSystem hdfs=FileSystem.get(ctxt.getConfiguration());
             FSDataInputStream inputStream = hdfs.open(path);   //??????????????how to create input stream...
             ObjectInputStream is=new ObjectInputStream(inputStream);
-            qfds=(QueryFocusedDataSet)is.readObject();
+            QueryFocusedDataSet qfds=(QueryFocusedDataSet)is.readObject();
             is.close();
-        } 
-        catch (Exception e) 
-        { 
-            e.printStackTrace(); 
-        }        
 
         Set<RequestReplyMatch> matches=qfds.getMatches();  //what if no match???
         String cook;
@@ -79,19 +73,13 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
 
             filename= "qfds/Cookie/Cookie_"+cookieHash;
             path=new Path(filename);
-            QueryFocusedDataSet qfdsc;
             try 
             {
                 FileSystem hdfsk=FileSystem.get(ctxt.getConfiguration());
                 FSDataInputStream inpuStream = hdfsk.open(path);
                 ObjectInputStream ks=new ObjectInputStream(inpuStream);
-                qfdsc=(QueryFocusedDataSet)ks.readObject();
+                 QueryFocusedDataSet qfdsc=(QueryFocusedDataSet)ks.readObject();
                 ks.close();
-            } 
-            catch (Exception e) 
-            { 
-                e.printStackTrace(); 
-            }
 
         Set<RequestReplyMatch> couple=qfdsc.getMatches();
         //context write each request/reply pair associated with each cookie
@@ -105,10 +93,19 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             hash = hd.digest();
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
             String hashUser = DatatypeConverter.printHexBinary(hashBytes);
-
             WTRKey userKey = new WTRKey("torusers", hashUser);
             ctxt.write(userKey, record);   //username
         }
+            } 
+            catch (Exception e) 
+            { 
+                e.printStackTrace(); 
+            }
     }
+        } 
+        catch (Exception e) 
+        { 
+            e.printStackTrace(); 
+        }        
 }
 }
