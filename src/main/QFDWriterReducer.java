@@ -5,6 +5,8 @@ import java.util.*;
 import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 
 public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWritable, NullWritable> {
 
@@ -29,14 +31,14 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         // hdfs.create(path, true) will create an
         // output stream pointing to that file   
         // use the reducer for is writing a QueryFocusedDataSet to the filesystem. 
-        ArrayList<WebTrafficRecord> myArr = new ArrayList<>();
-        for (WebTrafficRecord wtr: values) {
-            myArr.add(new WebTrafficRecord(wtr));
+        ArrayList<RequestReplyMatch> myArr = new ArrayList<>();
+        for (RequestReplyMatch wtr: values) {
+            myArr.add(new RequestReplyMatch(wtr));
         }
-        Set<QueryFocusedDataSet> qfdsSet = new HashSet();
+        Set<RequestReplyMatch> matchSet = new HashSet();
         for(int k=0; k<myArr.size(); k++)
         {
-            qfdsSet.add( myArr.get(k));
+            matchSet.add( myArr.get(k));
         }
         
         String keyName=key.getName();
@@ -46,7 +48,7 @@ public class QFDWriterReducer extends Reducer<WTRKey, RequestReplyMatch, NullWri
         Path path=new Path(filename);
         FSDataOutputStream outputStream = hdfs.create(path);
         ObjectOutputStream oos=new ObjectOutputStream(outputStream);
-        oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, qfdsSet));  
+        oos.writeObject(new QueryFocusedDataSet(keyName, keyHash, matchSet));  
         oos.close();
     }
 }

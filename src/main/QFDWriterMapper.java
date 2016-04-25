@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 public class QFDWriterMapper extends Mapper<RequestReplyMatch,
 				     NullWritable, WTRKey,
