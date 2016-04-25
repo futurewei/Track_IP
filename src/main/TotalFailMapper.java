@@ -48,7 +48,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         Path path=new Path(filename);
         try 
         {
-            FileSystem file=FileSystem.get(ctxt.getConfiguration());
+            FileSystem hdfs=FileSystem.get(ctxt.getConfiguration());
             FSDataInputStream inputStream = hdfs.create(path);
             ObjectInputStream is=new ObjectInputStream(inputStream);
             QueryFocusedDataSet qfds=(QueryFocusedDataSet)is.readObject();
@@ -75,8 +75,8 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             path=new Path(filename);
             try 
             {
-                FileSystem file=FileSystem.get(ctxt.getConfiguration());
-                FSDataInputStream inpuStream = hdfs.create(path);
+                FileSystem hdfsk=FileSystem.get(ctxt.getConfiguration());
+                FSDataInputStream inpuStream = hdfsk.create(path);
                 ObjectInputStream ks=new ObjectInputStream(inpuStream);
                 QueryFocusedDataSet qfdsc=(QueryFocusedDataSet)ks.readObject();
                 ks.close();

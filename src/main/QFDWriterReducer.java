@@ -3,7 +3,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.fs.FileSystem;
 import java.util.*;
 import java.io.FileOutputStream;
-import java.nio.file.Path;
+import org.apache.hadoop.fs.Path;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
