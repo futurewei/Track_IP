@@ -48,7 +48,8 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
         byte[] hash = md.digest();
         byte[] hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
         String hashString = DatatypeConverter.printHexBinary(hashBytes);
-        String filename= "qfds/srcIP/srcIP_"+hashString;
+       // String filename= "qfds/srcIP/srcIP_"+hashString;
+        String filename= "qfds/"+line.toString()+"/"+line.toString()+"_"+hashString;
         Path path=new Path(filename);
         QueryFocusedDataSet qfds=null;
         try 
@@ -65,6 +66,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             e.printStackTrace(); 
         }        
 
+        //得到这个srcIP的associated 所有的<srcIP, matching>
         Set<RequestReplyMatch> matches=qfds.getMatches();  //what if no match???
         String cook;
         Iterator iterr;
@@ -78,7 +80,9 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
             hashBytes = Arrays.copyOf(hash, HashUtils.NUM_HASH_BYTES);
             String cookieHash = DatatypeConverter.printHexBinary(hashBytes);  //generate a hash for each cookie.
 
-            filename= "qfds/cookie/cookie_"+cookieHash;
+            //打开以该cookie 为key的文件，得到<cookie, matching>
+            //filename= "qfds/cookie/cookie_"+cookieHash;
+            filename= "qfds/"+ cook+"/"+cook +"_"+cookieHash;
             path=new Path(filename);
             QueryFocusedDataSet qfdsc=null;
             try 
@@ -95,6 +99,7 @@ public class TotalFailMapper extends Mapper<LongWritable, Text, WTRKey,
                 e.printStackTrace(); 
             }
 
+            //这里应该只有一个couple，我觉得吧。。？每个cookie 只联系一组<srcIP, destIP>
         Set<RequestReplyMatch> couple=qfdsc.getMatches();
         //context write each request/reply pair associated with each cookie
         Iterator iter;

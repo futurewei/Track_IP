@@ -41,7 +41,7 @@ public class QFDMatcherReducer extends Reducer<IntWritable, WebTrafficRecord, Re
                 for(int j=0; j<myArray.size(); j++)
                 {
                     WebTrafficRecord reply=myArray.get(j);
-                    //may be wrong.
+                    //may be wrong.   request包含cookie信息，reply包含username信息，所以用Null来判断是request还是reply。
                     if(reply.getCookie()==null  && (request.getTimestamp()-reply.getTimestamp()>=-10 && request.getTimestamp()-reply.getTimestamp()<=10) && i!=j)
                     {
                      ctxt.write(new RequestReplyMatch( request, reply) , NullWritable.get());
